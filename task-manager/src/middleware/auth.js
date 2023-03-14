@@ -16,7 +16,8 @@ const auth = async (req, res, next) => {
             throw new Error()
         }
 
-        //we can store user in req, so that any route handler can access it later
+        //we can store user, token in req, so that any route handler can access it later
+        req.token = token
         req.user = user
         next()
     } catch (e) {
