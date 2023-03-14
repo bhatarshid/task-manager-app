@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 const router = new express.Router
 
 
@@ -8,8 +9,8 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body)
     
     try {
-        const token = await user.generateAuthToken() //create token for valid signup
         await user.save()
+        const token = await user.generateAuthToken() //create token for valid signup
         res.status(201).send({ user, token})
     } catch (e) {
         res.status(400).send(e)
@@ -24,7 +25,7 @@ router.post('/users', async (req, res) => {
 })
 
 //user login
-router.get('/users/login', async (req, res) => {
+router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = await user.generateAuthToken()
@@ -35,21 +36,12 @@ router.get('/users/login', async (req, res) => {
     }
 })
 
-//get all users
-router.get('/users', async (req, res) => {
-    try {
-        const users = await User.find({})
-        res.send(users)
-    }
-    catch (e) {
-        res.status(500).send(e)
-    }
-
-    // User.find({}).then((users) => {
-    //     res.send(users)
-    // }).catch((e) => {
-    //     res.status(500).send(e)
-    // })
+//get profile of logged in user
+//when someone makes request to /users, first middleware auth will run
+//then route handler will run only if middleware auth call next() function
+router.get('/users/me', auth, async (req, res) => {
+    //in authentication we saved the user details in req
+    res.send(req.user)
 })
 
 //get user by id
