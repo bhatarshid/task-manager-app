@@ -49,6 +49,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 })
 
 // show only useful data to user
@@ -106,6 +108,7 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
+//cascade delete
 userSchema.pre('deleteOne', { document: true }, async function(next) {
     const user = this
     await Task.deleteMany({ owner: user._id })
