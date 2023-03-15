@@ -5,7 +5,7 @@ const auth = async (req, res, next) => {
     try {
         //get the token and replace 'Bearer ' with '' which is in the beginning of token
         const token = req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, 'thisismytoken')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
         //decoded will have _id property as we provided it while generating token
         //below line will find user that has the correct id and has the token still stored
