@@ -6,6 +6,6 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/task-manager/src"
+    directory: "/task-manager"
     schedule:
       interval: "daily"
