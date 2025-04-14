@@ -11,9 +11,9 @@ const Home = () => {
     navigate('/login')
   }
   return (
-    <div className='p-5 flex items-center justify-center min-h-screen'>
+    <div className='flex flex-col items-center justify-center'>
       {/* Hero Section */}
-      <div className='mt-10 flex flex-col md:flex-row items-center justify-between mx-10'>
+      <div className='mt-10 flex flex-col md:flex-row items-center justify-between mx-10 min-h-screen py-10'>
         <div className='w-full sm:w-1/2'>
           <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold px-2 my-1'>Manage Your Tasks Efficiently.</h1>
           <h2 className='text-[14px] md:text-[18px] text-gray-400 font-semibold px-2 my-1 text-justify'>TaskManager helps you organize your work and life with a simple, intuitive interface.</h2>
@@ -26,7 +26,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <div className='bg-black border-[1px] border-gray-300 rounded-md w-full md:w-2/5 h-56'>
+        <div className='bg-black border-[1px] border-gray-300 rounded-md w-full md:w-2/5 py-5'>
           <div className='flex flex-row my-3'>
             <CheckCircle className='text-green-500 my-auto mx-6'/>
             <div>
@@ -52,7 +52,35 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      
+      <div className='bg-[#27272A] min-h-screen w-full flex flex-col items-center justify-center p-5'>
+        <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold mb-1'>Features</h1>
+        <h3 className='text-[14px] md:text-[18px] text-gray-400 font-semibold px-2 my-1 text-justify'>Everything you need to stay organized and productive</h3>
+        <div className='flex flex-col md:flex-row justify-between text-justify'>
+          <div className='flex flex-col items-center justify-center m-10'>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
+              <ListTodo className="h-6 w-6" />
+            </div>
+            <h1 className='text-xl font-bold'>Task Management</h1>
+            <p className='text-sm text-gray-400 font-semibold'>Create, update, and organize your tasks with ease</p>
+          </div>
+          <div className='flex flex-col items-center justify-center m-10'>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
+              <Clock className="h-6 w-6" />
+            </div>
+            <h1 className='text-xl font-bold'>Priority Setting</h1>
+            <p className='text-sm text-gray-400 font-semibold'>Set priorities to focus on what matters most</p>
+          </div>
+          <div className='flex flex-col items-center justify-center m-10'>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
+              <CheckCircle className="h-6 w-6" />
+            </div>
+            <h1 className='text-xl font-bold'>Progress Tracking</h1>
+            <p className='text-sm text-gray-400 font-semibold'>Track your progress and celebrate your achievements
+
+</p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
