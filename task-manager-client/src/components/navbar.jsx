@@ -2,7 +2,7 @@ import React from 'react'
 
 const Navbar = () => {
   return (
-    <div className='flex flex-row justify-between border-b-1 rounded-b-lg px-5 py-3'>
+    <div className='flex flex-row justify-between border-b-1 rounded-b-lg px-5 py-3 fixed top-0 left-0 right-0 shadow-md bg-black'>
       <h1 className='text-2xl font-bold text-center'>Task Manager</h1>
       <div>
         <button>
