@@ -23,7 +23,7 @@ const Signup = () => {
   }
 
   return (
-    <div className='flex items-center justify-center min-h-screen w-full pt-30 pb-12'>
+    <div className='flex items-center justify-center min-h-screen w-full pt-6 pb-12'>
       <div className='flex flex-col items-center justify-center w-full'>
         <h1 className='text-xl font-bold my-1'>Task Manager</h1>
         <h1 className='text-2xl font-bold my-1'>Create an account</h1>
