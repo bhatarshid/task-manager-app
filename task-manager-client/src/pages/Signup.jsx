@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { DayPicker } from 'react-day-picker'
+import { format } from 'date-fns'
 
 const Signup = () => {
+  const [selectedDay, setSelectedDay] = useState(null)
+  const [showCalendar, setShowCalendar] = useState(false)
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,12 +14,22 @@ const Signup = () => {
     dob: ''
   })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }))
+  const handleChange = (e, isDate=false) => {
+    if (isDate) {
+      const formattedDate = format(e, 'yyyy-MM-dd')
+      setSelectedDay(e)
+      setFormData((prev) => ({
+        ...prev,
+        dob: formattedDate
+      }))
+      setShowCalendar(false)
+    } else {
+      const { name, value } = e.target
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }))
+    }
   }
 
   const handleSubmit = (e) => {
@@ -61,11 +76,21 @@ const Signup = () => {
             <input 
               type='text'
               name='dob'
-              placeholder='Enter your dob'
+              placeholder='Select your dob'
               value={formData.dob}
-              onChange={handleChange}
+              onClick={() => setShowCalendar(!showCalendar)}
+              readOnly
               className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
             />
+            {showCalendar && (
+              <div className="mb-4 border border-gray-300 rounded-md bg-black p-2 z-50 w-fit absolute">
+                <DayPicker
+                  mode="single"
+                  selected={selectedDay}
+                  onSelect={(date) => handleChange(date, true)}
+                />
+              </div>
+            )}
             <button className='w-full mt-4'>
               <p className='text-black px-2 py-2 bg-white rounded-md'>Create account</p>
             </button>

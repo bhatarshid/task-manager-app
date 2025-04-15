@@ -1,8 +1,139 @@
-import React from 'react'
+import { format } from 'date-fns';
+import React, { useState } from 'react'
+import { DayPicker } from 'react-day-picker';
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Profile = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null)
+  const [showCalendar, setShowCalendar] = useState(false)
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    dob: ''
+  })
+
+  const handleChange = (e, isDate=false) => {
+    if (isDate) {
+      const formattedDate = format(e, 'yyyy-MM-dd')
+      setSelectedDay(e)
+      setFormData((prev) => ({
+        ...prev,
+        dob: formattedDate
+      }))
+      setShowCalendar(false)
+    } else {
+      const { name, value } = e.target
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }))
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(formData)
+  }
+
   return (
-    <div>Profile</div>
+    <div className='flex flex-col items-center justify-center min-h-screen'>
+      <div className='my-10'>
+        <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold'>Profile</h1>
+        <p className='text-[12px] md:text-[16px] text-gray-400 font-semibold my-1 text-justify'>Manage your account settings and preferences.</p>
+      </div>
+      <div className='flex flex-col bg-[#18181B] w-2/3 rounded-md p-6 sm:p-10 mb-10'>
+        <h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>General Information</h1>
+        <p className='text-[10px] md:text-[14px] text-gray-400 font-semibold my-1 text-justify'>Upload or update your profile picture</p>
+      </div>
+      <div className='flex flex-col bg-[#18181B] w-2/3 rounded-md p-6 sm:p-10 mb-10'>
+        <h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>General Information</h1>
+        <p className='text-[10px] md:text-[14px] text-gray-400 font-semibold my-1 text-justify'>Update your information</p>
+        <form onSubmit={handleSubmit}>
+          <p className='w-1/3 mt-3'>Name</p>
+          <input
+            type='text'
+            name='name'
+            placeholder='Enter your name'
+            value={formData.name}
+            onChange={handleChange}
+            className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
+          />
+          <p className='w-1/3 mt-3'>Email</p>
+          <input
+            type='text'
+            name='email'
+            placeholder='Enter your email'
+            value={formData.email}
+            onChange={handleChange}
+            className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
+          />
+          <p className='w-1/3 mt-3'>Password</p>
+          <input
+            type='password'
+            name='password'
+            placeholder='Create a password'
+            value={formData.password}
+            onChange={handleChange}
+            className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
+          />
+          <p className='w-1/3 mt-3'>DOB</p>
+          <input 
+            type='text'
+            name='dob'
+            placeholder='Select your dob'
+            value={formData.dob}
+            onClick={() => setShowCalendar(!showCalendar)}
+            readOnly
+            className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
+          />
+          {showCalendar && (
+            <div className="mb-4 border border-gray-300 rounded-md bg-black p-2 z-50 w-fit absolute">
+              <DayPicker
+                mode="single"
+                selected={selectedDay}
+                onSelect={(date) => handleChange(date, true)}
+              />
+            </div>
+          )}
+          <button type='submit' className='bg-zinc-700 hover:bg-zinc-600 text-white font-semibold py-2 px-4 rounded-md mt-4 cursor-pointer'>Save Changes</button>
+        </form>
+      </div>
+      <div className='flex flex-col bg-[#18181B] w-2/3 rounded-md p-6 sm:p-10 mb-10 border-[0.5px] border-red-900/30'>
+        <h3 className='text-red-500 text-xl sm:text-2xl md:text-3xl font-bold'>Danger Zone</h3>
+        <p className='text-[10px] md:text-[14px] text-gray-400 font-semibold my-1 text-justify'>Irreversible and destructive actions</p>
+        <hr className='border-1 text-zinc-800'/>
+        <h4 className='text-lg sm:text-xl md:text-2xl font-bold my-2'>Delete Account</h4>
+        <p className='text-[10px] md:text-[14px] text-gray-400 font-semibold my-1 text-justify'>Permanently delete your account and all associated data. Once you delete your account, there is no going back. Please be certain.</p>
+        <button onClick={() => setModalIsOpen(true)} className='bg-red-800 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md mt-4 cursor-pointer'>Delete Account</button>
+
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          className="w-[90%] md:w-[500px] bg-[#18181B] bg-opacity-50 p-6 rounded-lg shadow-lg mx-auto mt-20 outline-none"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-20 flex justify-center items-start z-50"
+        >
+          <h2 className='text-red-500 text-xl sm:text-2xl md:text-3xl font-bold'>Delete Account</h2>
+          <p className="mb-4 text-gray-200">This action is Irreversible. Are you sure...</p>
+          <button
+            onClick={() => setModalIsOpen(false)}
+            className="bg-red-500 text-white px-4 py-2 rounded mr-2 cursor-pointer"
+          >
+            Delete
+          </button>
+          <button
+            onClick={() => setModalIsOpen(false)}
+            className="bg-black text-white px-4 py-2 rounded cursor-pointer"
+          >
+            Cancel
+          </button>
+        </Modal>
+      </div>
+    </div>
   )
 }
 
