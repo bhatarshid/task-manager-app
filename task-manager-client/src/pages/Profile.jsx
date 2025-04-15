@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import React, { useState } from 'react'
+import { UploadIcon } from 'lucide-react';
+import React, { useState, useRef } from 'react'
 import { DayPicker } from 'react-day-picker';
 import Modal from "react-modal";
 
@@ -9,6 +10,7 @@ const Profile = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -40,15 +42,44 @@ const Profile = () => {
     console.log(formData)
   }
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('Selected file:', file);
+      // You can handle the file upload logic here
+    }
+  };
+
   return (
     <div className='flex flex-col items-center justify-center min-h-screen'>
-      <div className='my-10'>
+      <div className='justify-start my-10 w-2/3'>
         <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold'>Profile</h1>
         <p className='text-[12px] md:text-[16px] text-gray-400 font-semibold my-1 text-justify'>Manage your account settings and preferences.</p>
       </div>
       <div className='flex flex-col bg-[#18181B] w-2/3 rounded-md p-6 sm:p-10 mb-10'>
-        <h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>General Information</h1>
+        <h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>Profile Picture</h1>
         <p className='text-[10px] md:text-[14px] text-gray-400 font-semibold my-1 text-justify'>Upload or update your profile picture</p>
+        <div className='flex flex-col sm:flex-row space-x-5 mt-4'>
+          <img 
+            src='' 
+            className='w-32 h-32 rounded-full mb-4' 
+          />
+          <button
+            className='bg-zinc-700 hover:bg-zinc-600 text-white font-semibold rounded-md cursor-pointer h-fit py-2 px-3 my-auto'
+            onClick={() => fileInputRef.current.click()}
+          >
+            <div className='flex items-center'>
+              <UploadIcon className='w-4 h-4 mr-2' />
+              <p>Upload Image</p>
+            </div>
+          </button>
+          <input
+            type='file'
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+          />
+        </div>
       </div>
       <div className='flex flex-col bg-[#18181B] w-2/3 rounded-md p-6 sm:p-10 mb-10'>
         <h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>General Information</h1>
