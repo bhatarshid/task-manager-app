@@ -63,9 +63,6 @@ export const getProfile = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await getProfileAPI();
-      if (response.status !== 200) {
-        throw new Error("Login failed");
-      }
       return response.data;
     } catch (error) {
       toast.error(error.response.data.e);
@@ -75,6 +72,21 @@ export const getProfile = createAsyncThunk(
     }
   }
 );
+
+export const logoutUser = createAsyncThunk(
+  "user/logoutUser",
+  async (_, thunkAPI) => {
+    try {
+      console.log('here is we')
+    }
+    catch (error) {
+      toast.error(error.response.data.e);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+)
 
 const userSlice = createSlice({
   name: 'user',
