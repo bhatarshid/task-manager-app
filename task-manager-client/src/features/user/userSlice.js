@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createUserAPI, loginUserAPI } from '../../api/user'
+import { createUserAPI, loginUserAPI, getProfileAPI } from '../../api/user'
 import { toast } from 'react-hot-toast'
 
 const initialState = {
@@ -23,7 +23,6 @@ export const createUser = createAsyncThunk('user/createUser', async (userData, t
     return response.data
   }
   catch (error) {
-    console.log({error: error.response})
     if (error.response.data.code === 11000){
       toast.error("User already exists")
     }
@@ -46,6 +45,24 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem("authToken", token);
         toast.success("Login Successful");
       }
+      if (response.status !== 200) {
+        throw new Error("Login failed");
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.e);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const getProfile = createAsyncThunk(
+  "user/getProfile",
+  async (_, thunkAPI) => {
+    try {
+      const response = await getProfileAPI();
       if (response.status !== 200) {
         throw new Error("Login failed");
       }
@@ -96,6 +113,20 @@ const userSlice = createSlice({
         state.success = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(getProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.success = true;
+      })
+      .addCase(getProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.success = false;
