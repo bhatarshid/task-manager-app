@@ -5,6 +5,7 @@ import Signup from "./pages/signup"
 import Dashboard from "./pages/Dashboard"
 import Profile from "./pages/Profile"
 import NotFound from "./pages/NotFound"
+import PrivateRoute from "./pages/PrivateRoute"
 
 function App() {
   return (
@@ -13,8 +14,24 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
