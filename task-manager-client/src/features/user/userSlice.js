@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createUserAPI } from '../../api/user'
+import { toast } from 'react-hot-toast'
 
 const initialState = {
   user: null,
@@ -11,10 +12,22 @@ const initialState = {
 export const createUser = createAsyncThunk('user/createUser', async (userData, thunkAPI) => {
   try {
     const response = await createUserAPI(userData);
+    if (response.status === 201) {
+      toast.success('Signup completed')
+    }
+    if (response.status !== 201) {
+      throw new Error('Signup failed')
+    } 
     return response.data
   }
   catch (error) {
-    console.log({error})
+    console.log({error: error.response})
+    if (error.response.data.code === 11000){
+      toast.error("User already exists")
+    }
+    else {
+      toast.error(error.response.data.message)
+    }
     return thunkAPI.rejectWithValue(
       error.response?.data || "Something went wrong"
     );

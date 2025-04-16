@@ -1,15 +1,25 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { DayPicker } from 'react-day-picker'
 import { format } from 'date-fns'
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createUser } from '../features/user/userSlice';
+import { Loader } from 'lucide-react'
 
 const Signup = () => {
   const dispatch = useDispatch()
+  const { user, loading} = useSelector((state) => state.user)
+  const navigation= useNavigate()
 
   const [selectedDay, setSelectedDay] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      navigation('/dashboard')
+    }
+  }, [user, navigation])
 
   const [formData, setFormData] = useState({
     name: '',
@@ -96,9 +106,15 @@ const Signup = () => {
                 />
               </div>
             )}
-            <button className='w-full mt-4'>
-              <p className='text-black px-2 py-2 bg-white rounded-md'>Create account</p>
-            </button>
+            {loading ? (
+              <div className='w-full mt-4 text-black px-2 py-2 bg-white rounded-md cursor-not-allowed opacity-50'>
+                <Loader className='animate-spin mx-auto' size={20} color='black' />
+              </div>
+            ) : (
+              <button className='w-full mt-4'>
+                <p className='text-black px-2 py-2 bg-white rounded-md'>Create account</p>
+              </button>
+            )}
           </form>
           <p className='text-sm text-gray-200 font-normal my-3'>Already have an account? <Link to='/login' className='text-blue-600 cursor-pointer'>Login</Link></p>
         </div>
