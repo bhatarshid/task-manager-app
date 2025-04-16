@@ -3,10 +3,12 @@ require('./db/mongoose')
 require('dotenv').config()
 const userRouter = require('./routers/user')
 const taskRouter = require('./routers/task')
+const cors = require('cors')
 
 const app = express()
 const PORT = process.env.PORT
 
+app.use(cors()) 
 //parse incoming json to object
 app.use(express.json())
 
