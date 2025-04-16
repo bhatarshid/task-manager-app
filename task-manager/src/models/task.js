@@ -3,10 +3,18 @@ const validator = require('validator')
 
 //task schema
 const taskSchema = new mongoose.Schema({
+    title: {
+      type: String,
+      required: true
+    },
     description: {
         type: String,
         required: true,
         trim: true
+    },
+    priority: {
+      type: String,
+      required: true
     },
     completed: {
         type: Boolean,
