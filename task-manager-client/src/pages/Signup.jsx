@@ -2,8 +2,12 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DayPicker } from 'react-day-picker'
 import { format } from 'date-fns'
+import { useDispatch } from 'react-redux';
+import { createUser } from '../features/user/userSlice';
 
 const Signup = () => {
+  const dispatch = useDispatch()
+
   const [selectedDay, setSelectedDay] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
 
@@ -20,7 +24,7 @@ const Signup = () => {
       setSelectedDay(e)
       setFormData((prev) => ({
         ...prev,
-        dob: formattedDate
+        DOB: formattedDate
       }))
       setShowCalendar(false)
     } else {
@@ -35,6 +39,7 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault() // Prevent page reload
     console.log(formData)
+    dispatch(createUser(formData))
   }
 
   return (
