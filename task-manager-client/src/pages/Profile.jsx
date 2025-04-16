@@ -77,7 +77,7 @@ const Profile = () => {
     dispatch(deleteAccount())
       .unwrap()
       .then(() => {
-        navigate(0)
+        navigate('/signin')
       })
       .catch(() => {
         toast.error('Something went wrong')

@@ -23,10 +23,12 @@ const Navbar = () => {
           setLoggedin(true);
         } else {
           navigate('/login');
+          setLoggedin(false)
         }
       } catch (error) {
         console.log(error)
         navigate('/login');
+        setLoggedin(false)
       }
     };
 
@@ -38,6 +40,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     await dispatch(logoutUser())
     navigate('/login')
+    setLoggedin(false)
   }
 
   return (
