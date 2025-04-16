@@ -45,7 +45,7 @@ const Navbar = () => {
 
   return (
     <div className='flex flex-row items-center justify-between border-b-1 rounded-b-lg px-5 py-1 sm:py-3 top-0 left-0 right-0 shadow-md bg-black'>
-      <Link to={loggedin ? '/dashboard' : '/home'} className='text-sm sm:text-2xl font-semibold sm:font-bold text-center'>Task Manager</Link>
+      <Link to={loggedin ? '/dashboard' : '/'} className='text-sm sm:text-2xl font-semibold sm:font-bold text-center'>Task Manager</Link>
       {loggedin ? (
         <div>
           <button onClick={toggleDropdown} className="flex items-center space-x-4 cursor-pointer">
@@ -71,6 +71,7 @@ const Navbar = () => {
             <div className="absolute right-0 mt-2 w-48 bg-black rounded-lg shadow-lg py-2 border-[1px] border-white">
               <Link
                 to="/profile"
+                onClick={() => setIsDropdownOpen(false)}
                 className="block px-4 py-2 text-sm hover:bg-[#0e0d0d] rounded transition duration-300"
               >
                 Profile

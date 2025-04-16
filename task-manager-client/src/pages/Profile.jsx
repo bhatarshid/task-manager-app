@@ -15,7 +15,7 @@ const Profile = () => {
   const [selectedDay, setSelectedDay] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
   const fileInputRef = useRef(null)
-  const { user, loading } = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -60,7 +60,7 @@ const Profile = () => {
     const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('avatar', file);
 
       dispatch(uploadAvatar(formData))
         .unwrap()
