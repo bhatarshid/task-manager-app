@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProfile, logoutUser } from '../features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -37,9 +36,8 @@ const Navbar = () => {
   }, [dispatch, navigate]);
 
   const handleLogout = async () => {
-    // await dispatch(logoutUser)
-    localStorage.removeItem('authToken')
-    console.log(localStorage.getItem('authToken'))
+    await dispatch(logoutUser())
+    navigate('/login')
   }
 
   return (

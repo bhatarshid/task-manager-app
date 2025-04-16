@@ -110,7 +110,7 @@ const Signup = () => {
                 <Loader className='animate-spin mx-auto' size={20} color='black' />
               </div>
             ) : (
-              <button className='w-full mt-4'>
+              <button className='w-full mt-4 cursor-pointer'>
                 <p className='text-black px-2 py-2 bg-white rounded-md'>Create account</p>
               </button>
             )}

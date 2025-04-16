@@ -3,6 +3,10 @@ import { UploadIcon } from 'lucide-react';
 import React, { useState, useRef } from 'react'
 import { DayPicker } from 'react-day-picker';
 import Modal from "react-modal";
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteAccount, updateProfile, uploadAvatar } from '../features/user/userSlice';
+import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast';
 
 Modal.setAppElement("#root");
 
@@ -10,7 +14,10 @@ const Profile = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null)
+  const { user, loading } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -37,18 +44,45 @@ const Profile = () => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     console.log(formData)
+    const data = {}
+    if (formData.name !== '') data.name = formData.name;
+    if (formData.email !== '') data.email = formData.email;
+    if (formData.password !== '') data.password = formData.password;
+    if (formData.dob !== '') data.DOB = formData.dob
+
+    dispatch(updateProfile(data))
   }
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('Selected file:', file);
-      // You can handle the file upload logic here
+      const formData = new FormData();
+      formData.append('file', file);
+
+      dispatch(uploadAvatar(formData))
+        .unwrap()
+        .then(() => {
+          console.log('Avatar uploaded successfully');
+        })
+        .catch((error) => {
+          console.error('Error uploading avatar:', error);
+        });
     }
   };
+
+  const handleDeleteAction = () => {
+    dispatch(deleteAccount())
+      .unwrap()
+      .then(() => {
+        navigate(0)
+      })
+      .catch(() => {
+        toast.error('Something went wrong')
+      })
+  }
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen'>
@@ -60,10 +94,23 @@ const Profile = () => {
         <h1 className='text-xl sm:text-2xl md:text-3xl font-bold'>Profile Picture</h1>
         <p className='text-[10px] md:text-[14px] text-gray-400 font-semibold my-1 text-justify'>Upload or update your profile picture</p>
         <div className='flex flex-col sm:flex-row space-x-5 mt-4'>
-          <img 
-            src='' 
-            className='w-32 h-32 rounded-full mb-4' 
-          />
+          {user?.avatar ? (
+            <img 
+              src={`data:image/jpeg;base64,${user.avatar}`}
+              alt='Profile'
+              className='w-32 h-32 rounded-full mb-4'
+            />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-800 flex items-center justify-center text-white text-6xl font-bold mb-4">
+                {user?.name
+                  ? user.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()
+                  : 'U'}
+              </div>
+          )}
           <button
             className='bg-zinc-700 hover:bg-zinc-600 text-white font-semibold rounded-md cursor-pointer h-fit py-2 px-3 my-auto'
             onClick={() => fileInputRef.current.click()}
@@ -89,7 +136,7 @@ const Profile = () => {
           <input
             type='text'
             name='name'
-            placeholder='Enter your name'
+            placeholder={user?.name || 'Enter your name'}
             value={formData.name}
             onChange={handleChange}
             className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
@@ -98,7 +145,7 @@ const Profile = () => {
           <input
             type='text'
             name='email'
-            placeholder='Enter your email'
+            placeholder={user?.email || 'Enter your email'}
             value={formData.email}
             onChange={handleChange}
             className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
@@ -107,7 +154,7 @@ const Profile = () => {
           <input
             type='password'
             name='password'
-            placeholder='Create a password'
+            placeholder='Create a new password'
             value={formData.password}
             onChange={handleChange}
             className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
@@ -116,7 +163,7 @@ const Profile = () => {
           <input 
             type='text'
             name='dob'
-            placeholder='Select your dob'
+            placeholder={user?.DOB || 'Select your dob'}
             value={formData.dob}
             onClick={() => setShowCalendar(!showCalendar)}
             readOnly
@@ -151,8 +198,8 @@ const Profile = () => {
           <h2 className='text-red-500 text-xl sm:text-2xl md:text-3xl font-bold'>Delete Account</h2>
           <p className="mb-4 text-gray-200">This action is Irreversible. Are you sure...</p>
           <button
-            onClick={() => setModalIsOpen(false)}
-            className="bg-red-500 text-white px-4 py-2 rounded mr-2 cursor-pointer"
+            onClick={handleDeleteAction}
+            className="bg-red-800 hover:bg-red-500 text-white px-4 py-2 rounded mr-2 cursor-pointer"
           >
             Delete
           </button>
