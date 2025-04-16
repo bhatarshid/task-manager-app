@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createUserAPI } from '../../api/user'
+import { createUserAPI, loginUserAPI } from '../../api/user'
 import { toast } from 'react-hot-toast'
 
 const initialState = {
@@ -13,6 +13,8 @@ export const createUser = createAsyncThunk('user/createUser', async (userData, t
   try {
     const response = await createUserAPI(userData);
     if (response.status === 201) {
+      const { token } =  response.data
+      localStorage.setItem('authToken', token)
       toast.success('Signup completed')
     }
     if (response.status !== 201) {
@@ -34,6 +36,29 @@ export const createUser = createAsyncThunk('user/createUser', async (userData, t
   }
 })
 
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async (loginData, thunkAPI) => {
+    try {
+      const response = await loginUserAPI(loginData);
+      if (response.status === 200) {
+        const { token } = response.data;
+        localStorage.setItem("authToken", token);
+        toast.success("Login Successful");
+      }
+      if (response.status !== 200) {
+        throw new Error("Login failed");
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.e);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -48,19 +73,33 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createUser.pending, (state) => {
-        state.loading = true
-        state.error = null
+        state.loading = true;
+        state.error = null;
       })
       .addCase(createUser.fulfilled, (state, action) => {
-        state.loading = false
-        state.user = action.payload
-        state.success = true
+        state.loading = false;
+        state.user = action.payload;
+        state.success = true;
       })
       .addCase(createUser.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-        state.success = false
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
       })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.success = true;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      });
   }
 })
 

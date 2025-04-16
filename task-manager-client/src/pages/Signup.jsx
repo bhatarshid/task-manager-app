@@ -10,16 +10,16 @@ import { Loader } from 'lucide-react'
 const Signup = () => {
   const dispatch = useDispatch()
   const { user, loading} = useSelector((state) => state.user)
-  const navigation= useNavigate()
+  const navigate= useNavigate()
 
   const [selectedDay, setSelectedDay] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
 
   useEffect(() => {
     if (user) {
-      navigation('/dashboard')
+      navigate('/dashboard')
     }
-  }, [user, navigation])
+  }, [user, navigate])
 
   const [formData, setFormData] = useState({
     name: '',

@@ -1,8 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { loginUser } from '../features/user/userSlice';
+import { Loader } from 'lucide-react'
 
 const Login = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { user, loading} = useSelector((state) => state.user)
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
 
   const [formData, setFormData] = useState({
     email: '',
@@ -20,7 +32,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(formData)
-    navigate('/dashboard')
+    dispatch(loginUser(formData))
   }
 
   return (
@@ -49,9 +61,15 @@ const Login = () => {
               onChange={handleChange}
               className='border border-gray-300 rounded-md p-2 mb-3 w-full bg-black'
             />
-            <button className='w-full mt-4'>
-              <p className='text-black px-2 py-2 bg-white rounded-md'>Sign in</p>
-            </button>
+            {loading ? (
+              <div className='w-full mt-4 text-black px-2 py-2 bg-white rounded-md cursor-not-allowed opacity-50'>
+                <Loader className='animate-spin mx-auto' size={20} color='black' />
+              </div>
+            ) : (
+              <button className='w-full mt-4'>
+                <p className='text-black px-2 py-2 bg-white rounded-md'>Sign in</p>
+              </button>
+            )}
           </form>
           <p className='text-sm text-gray-200 font-normal my-3'>Don't have an account? <Link to='/signup' className='text-blue-600 cursor-pointer'>Sign up</Link></p>
         </div>
