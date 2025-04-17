@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  createTaskAPI,
   getTasksAPI
 } from "../../api/task";
 import { toast } from "react-hot-toast";
@@ -22,11 +23,28 @@ export const getTasks = createAsyncThunk(
       }
       return response.data;
     } catch (error) {
-      if (error.response.data.code === 11000) {
-        toast.error("User already exists");
-      } else {
-        toast.error(error.response.data.message);
+      toast.error(error.response.data.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const createTask = createAsyncThunk(
+  "user/createTask",
+  async (data, thunkAPI) => {
+    try {
+      const response = await createTaskAPI(data);
+      if (response.status === 201) {
+        toast.success("Task created successfully")
       }
+      else {
+        throw new Error("Something went wrong");
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.message);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Something went wrong"
       );
@@ -58,6 +76,19 @@ const taskSlice = createSlice({
         state.success = true;
       })
       .addCase(getTasks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(createTask.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createTask.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(createTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.success = false;

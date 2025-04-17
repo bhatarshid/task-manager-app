@@ -1,13 +1,24 @@
 import React, { useState } from 'react'
 import Modal from "react-modal";
 import { X } from 'lucide-react'
+import { useDispatch } from 'react-redux';
+import { createTask } from '../features/task/taskSlice';
+import toast from 'react-hot-toast';
 
 const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
+  const dispatch = useDispatch()
+  const priorities = [
+    { label: 'Low', value: 'low', color: 'bg-green-900' },
+    { label: 'Medium', value: 'medium', color: 'bg-yellow-900' },
+    { label: 'High', value: 'high', color: 'bg-red-900' }
+  ]
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     priority: ''
   })
+  const [priority, setPriority] = useState()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -17,8 +28,21 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
     }))
   }
 
-  const handleForm = () => {
-    
+  const handleForm = async () => {
+    formData.priority = priority
+    await dispatch(createTask(formData))
+      .unwrap()
+      .then(() => {
+        setModalIsOpen(false)
+      })
+      .catch(() => {
+        setFormData({
+          title: '',
+          description: '',
+          priority: ''
+        })
+        setPriority('')
+      })
   }
 
   return (
@@ -40,7 +64,7 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
           </div>
           <hr className='pt-3 mx-9'/>
           <div className='pb-3 px-10 w-full items-center'>
-            <form onSubmit={handleForm}>
+            <form onSubmit={(e) => { e.preventDefault(); handleForm(); }}>
               <p className='mt-2 mb-0.5'>Title</p>
               <input
                 type='text'
@@ -59,14 +83,18 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
                 className='border border-gray-300 rounded-md p-2 w-full h-26 bg-black resize-none'
               />
               <p className='mt-2 mb-0.5'>Priority</p>
-              <input
-                type='text'
-                name='priority'
-                placeholder='Enter task priority'
-                value={formData.priority}
-                onChange={handleChange}
-                className='border border-gray-300 rounded-md p-2 w-full bg-black'
-              />
+              <div className='flex items-center space-x-3'>
+                {priorities.map(({ label, value, color }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setPriority(value)}
+                    className={`${color} px-8 py-1 rounded-md cursor-pointer hover:px-6 ${priority === value ? 'border-2' : ''}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
               <button type='submit' className='w-full bg-zinc-700 hover:bg-zinc-600 text-white font-semibold py-2 px-4 rounded-md my-4 cursor-pointer'>Add Task</button>
             </form>
           </div>
