@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { Square, Edit, CheckSquare, Trash2 } from 'lucide-react'
-import { useDispatch } from 'react-redux'
-import { deleteTask } from '../features/task/taskSlice'
+import { deleteTask, editTask } from '../features/task/taskSlice'
 import EditTaskModal from './EditTaskModal'
 
-const TaskCard = ({ task }) => {
-  const dispatch = useDispatch()
+const TaskCard = ({ task, dispatch }) => {
   const { _id, title, description, completed, priority } = task
   const [editModalOpen, setEditModalOpen] = useState(false)
 
@@ -19,17 +17,33 @@ const TaskCard = ({ task }) => {
     dispatch(deleteTask(id))
   }
 
+  const handleTaskStatus = async (status) => {
+    console.log(status)
+    const data = {
+      id: task?._id,
+      title,
+      description,
+      priority,
+      completed: status
+    }
+    await dispatch(editTask(data)).unwrap()
+  }
+
   return (
     <div className={`p-5 rounded-md border-[1px] border-white w-full ${completed ? 'bg-[#0C0C0E]' : 'bg-black'}`}>
       <div className="flex mb-4">
         {completed ? (
-          <CheckSquare className="stroke-[1px] my-auto" />
+          <button onClick={() => handleTaskStatus(false)} className='cursor-pointer'>
+            <CheckSquare className="stroke-[1px] my-auto" />
+          </button>
         ) : (
-          <Square className="stroke-[1px] my-auto cursor-pointer" />
+          <button onClick={() => handleTaskStatus(true)} className='cursor-pointer'>
+            <Square className="stroke-[1px] my-auto" />
+          </button>
         )}
         <div className="ml-3">
           <h1 className={`text-lg font-semibold ${completed ? 'line-through text-gray-500' : ''}`}>{title}</h1>
-          <p className={`text-sm ${completed ? 'text-gray-700' : 'text-gray-400'}`}>{description}</p>
+          <p title={description} className={`text-sm ${completed ? 'text-gray-700' : 'text-gray-400'} line-clamp-1`}>{description}</p>
         </div>
       </div>
       <div className="flex flex-row items-center justify-between">
@@ -41,7 +55,7 @@ const TaskCard = ({ task }) => {
             <Edit className="stroke-1 h-4 w-4" />
           </button>
           {editModalOpen && (
-            <EditTaskModal task={task} editModalOpen={editModalOpen} setEditModalOpen={setEditModalOpen}/>
+            <EditTaskModal task={task} editModalOpen={editModalOpen} setEditModalOpen={setEditModalOpen} dispatch={dispatch} />
           )}
           <button onClick={() => handleDelete(_id)} className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
             <Trash2 className="stroke-1 h-4 w-4" />

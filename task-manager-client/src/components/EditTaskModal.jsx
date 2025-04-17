@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import Modal from "react-modal";
 import { X } from 'lucide-react'
-import { useDispatch } from 'react-redux';
 import { editTask } from '../features/task/taskSlice';
 
-const EditTaskModal = ({ task, editModalOpen, setEditModalOpen }) => {
-  const dispatch = useDispatch()
+const EditTaskModal = ({ task, editModalOpen, setEditModalOpen, dispatch }) => {
   const priorities = [
     { label: 'Low', value: 'low', color: 'bg-green-900' },
     { label: 'Medium', value: 'medium', color: 'bg-yellow-900' },

@@ -77,6 +77,7 @@ export const deleteTask = createAsyncThunk(
 export const editTask = createAsyncThunk(
   "user/editTask",
   async (data, thunkAPI) => {
+    console.log(data)
     try {
       const response = await editTaskAPI(data);
       if (response.status === 200) {

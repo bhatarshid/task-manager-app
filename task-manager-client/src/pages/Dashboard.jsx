@@ -34,11 +34,11 @@ const Dashboard = () => {
         </button>
       </div>
       {modalIsOpen && (
-        <AddTaskModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
+        <AddTaskModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} dispatch={dispatch} />
       )}
       <div className='grid sm:grid-cols-2 gap-4'>
         {tasks?.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} dispatch={dispatch}/>
         ))}
       </div>
     </div>
