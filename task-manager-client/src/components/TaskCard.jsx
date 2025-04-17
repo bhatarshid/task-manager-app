@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Square, Edit, CheckSquare, Trash2 } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { deleteTask } from '../features/task/taskSlice'
+import EditTaskModal from './EditTaskModal'
 
 const TaskCard = ({ task }) => {
   const dispatch = useDispatch()
   const { _id, title, description, completed, priority } = task
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const priorityStyles = {
     high: 'text-red-400 bg-[#371517]',
@@ -35,9 +37,12 @@ const TaskCard = ({ task }) => {
           {priority.charAt(0).toUpperCase() + priority.slice(1)} Priority
         </p>
         <div className="flex flex-row items-center space-x-5">
-          <button className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
+          <button onClick={() => setEditModalOpen(true)} className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
             <Edit className="stroke-1 h-4 w-4" />
           </button>
+          {editModalOpen && (
+            <EditTaskModal task={task} editModalOpen={editModalOpen} setEditModalOpen={setEditModalOpen}/>
+          )}
           <button onClick={() => handleDelete(_id)} className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
             <Trash2 className="stroke-1 h-4 w-4" />
           </button>

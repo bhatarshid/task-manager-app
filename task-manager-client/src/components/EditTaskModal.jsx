@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import Modal from "react-modal";
 import { X } from 'lucide-react'
 import { useDispatch } from 'react-redux';
-import { createTask } from '../features/task/taskSlice';
+import { editTask } from '../features/task/taskSlice';
 
-const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
+const EditTaskModal = ({ task, editModalOpen, setEditModalOpen }) => {
   const dispatch = useDispatch()
   const priorities = [
     { label: 'Low', value: 'low', color: 'bg-green-900' },
@@ -13,11 +13,12 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
   ]
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    priority: ''
+    id: task?._id,
+    title: task?.title,
+    description: task?.description,
+    priority: task?.priority
   })
-  const [priority, setPriority] = useState()
+  const [priority, setPriority] = useState(task?.priority)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -29,33 +30,33 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
 
   const handleForm = async () => {
     formData.priority = priority
-    await dispatch(createTask(formData))
+    await dispatch(editTask(formData))
       .unwrap()
       .then(() => {
-        setModalIsOpen(false)
+        setEditModalOpen(false)
       })
       .catch(() => {
         setFormData({
-          title: '',
-          description: '',
-          priority: ''
+          title: task?.title,
+          description: task?.description,
+          priority: task?.priority
         })
-        setPriority('')
+        setPriority(task?.priority)
       })
   }
 
   return (
     <div>
       <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
+          isOpen={editModalOpen}
+          onRequestClose={() => setEditModalOpen(false)}
           className="bg-[#18181B] w-4/5 sm:w-1/2 flex flex-col justify-center m-auto rounded-2xl border-[1px]"
           overlayClassName="fixed inset-0 flex bg-white/20"
         >
           <div className='flex flex-row items-center justify-between w-full px-10 pt-3 pb-2'>
-            <h2 className='font-bold'>Add New Task</h2>
+            <h2 className='font-bold'>Edit Task</h2>
             <button
-              onClick={() => setModalIsOpen(false)}
+              onClick={() => setEditModalOpen(false)}
               className='p-2 hover:bg-zinc-600 cursor-pointer rounded-xl'
             >
               <X />
@@ -94,7 +95,7 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
                   </button>
                 ))}
               </div>
-              <button type='submit' className='w-full bg-zinc-700 hover:bg-zinc-600 text-white font-semibold py-2 px-4 rounded-md my-4 cursor-pointer'>Add Task</button>
+              <button type='submit' className='w-full bg-zinc-700 hover:bg-zinc-600 text-white font-semibold py-2 px-4 rounded-md my-4 cursor-pointer'>Edit Task</button>
             </form>
           </div>
         </Modal>
@@ -102,4 +103,4 @@ const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
   )
 }
 
-export default AddTaskModal
+export default EditTaskModal
