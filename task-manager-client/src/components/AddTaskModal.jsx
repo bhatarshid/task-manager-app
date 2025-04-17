@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { X } from 'lucide-react'
 import { useDispatch } from 'react-redux';
 import { createTask } from '../features/task/taskSlice';
-import toast from 'react-hot-toast';
 
 const AddTaskModal = ({ modalIsOpen, setModalIsOpen }) => {
   const dispatch = useDispatch()
