@@ -1,13 +1,20 @@
 import React from 'react'
-import { Square, Edit, LucideDelete, CheckSquare } from 'lucide-react'
+import { Square, Edit, CheckSquare, Trash2 } from 'lucide-react'
+import { useDispatch } from 'react-redux'
+import { deleteTask } from '../features/task/taskSlice'
 
 const TaskCard = ({ task }) => {
-  const { title, description, completed, priority } = task
+  const dispatch = useDispatch()
+  const { _id, title, description, completed, priority } = task
 
   const priorityStyles = {
     high: 'text-red-400 bg-[#371517]',
     medium: 'text-yellow-400 bg-[#3a372a]',
     low: 'text-green-400 bg-[#3e584b]',
+  }
+
+  const handleDelete = async (id) => {
+    dispatch(deleteTask(id))
   }
 
   return (
@@ -31,8 +38,8 @@ const TaskCard = ({ task }) => {
           <button className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
             <Edit className="stroke-1 h-4 w-4" />
           </button>
-          <button className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
-            <LucideDelete className="stroke-1 h-4 w-4" />
+          <button onClick={() => handleDelete(_id)} className="border-[1px] border-gray-800 rounded-md p-2 cursor-pointer hover:bg-gray-900">
+            <Trash2 className="stroke-1 h-4 w-4" />
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createTaskAPI,
+  deleteTaskAPI,
   getTasksAPI
 } from "../../api/task";
 import { toast } from "react-hot-toast";
@@ -52,6 +53,26 @@ export const createTask = createAsyncThunk(
   }
 );
 
+export const deleteTask = createAsyncThunk(
+  "user/deleteTask",
+  async (data, thunkAPI) => {
+    try {
+      const response = await deleteTaskAPI(data);
+      if (response.status === 200) {
+        toast.success("Task deleted successfully");
+      } else {
+        throw new Error("Something went wrong");
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
 const taskSlice = createSlice({
   name: "task",
   initialState,
@@ -89,6 +110,19 @@ const taskSlice = createSlice({
         state.success = true;
       })
       .addCase(createTask.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteTask.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.success = false;
