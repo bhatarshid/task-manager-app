@@ -15,6 +15,9 @@ app.use(express.json())
 //use the routes
 app.use(userRouter)
 app.use(taskRouter)
+app.get('/', async (req, res) => {
+  res.status(200).send({ message: 'App is running'})
+})
 
 app.listen(PORT, () => {
     console.log("Server is up on port ", PORT)
