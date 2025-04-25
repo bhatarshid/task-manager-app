@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Square, Edit, CheckSquare, Trash2 } from 'lucide-react'
-import { deleteTask, editTask } from '../features/task/taskSlice'
+import { deleteTask, editTask, getTasks } from '../features/task/taskSlice'
 import EditTaskModal from './EditTaskModal'
 
 const TaskCard = ({ task, dispatch }) => {
@@ -14,7 +14,11 @@ const TaskCard = ({ task, dispatch }) => {
   }
 
   const handleDelete = async (id) => {
-    dispatch(deleteTask(id))
+    await dispatch(deleteTask(id))
+          .unwrap()
+          .then(() => {
+            dispatch(getTasks())
+          })
   }
 
   const handleTaskStatus = async (status) => {
@@ -26,7 +30,11 @@ const TaskCard = ({ task, dispatch }) => {
       priority,
       completed: status
     }
-    await dispatch(editTask(data)).unwrap()
+    await dispatch(editTask(data))
+      .unwrap()
+      .then(() => {
+        dispatch(getTasks())
+      })
   }
 
   return (

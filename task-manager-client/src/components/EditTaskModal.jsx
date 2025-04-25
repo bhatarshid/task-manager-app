@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Modal from "react-modal";
 import { X } from 'lucide-react'
-import { editTask } from '../features/task/taskSlice';
+import { editTask, getTasks } from '../features/task/taskSlice';
 
 const EditTaskModal = ({ task, editModalOpen, setEditModalOpen, dispatch }) => {
   const priorities = [
@@ -32,6 +32,7 @@ const EditTaskModal = ({ task, editModalOpen, setEditModalOpen, dispatch }) => {
       .unwrap()
       .then(() => {
         setEditModalOpen(false)
+        dispatch(getTasks())
       })
       .catch(() => {
         setFormData({
