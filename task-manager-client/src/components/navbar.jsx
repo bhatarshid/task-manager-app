@@ -44,7 +44,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className='flex flex-row items-center justify-between border-b-1 rounded-b-lg px-5 py-1 sm:py-3 top-0 left-0 right-0 shadow-md bg-black'>
+    <div className='flex flex-row items-center justify-between border-b-1 rounded-b-lg px-5 py-3 sm:py-3 top-0 left-0 right-0 shadow-md bg-black'>
       <Link to={loggedin ? '/dashboard' : '/'} className='text-sm sm:text-2xl font-semibold sm:font-bold text-center'>Task Manager</Link>
       {loggedin ? (
         <div>

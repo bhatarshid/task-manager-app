@@ -39,7 +39,7 @@ const Login = () => {
         <h1 className='text-xl font-bold my-1'>Task Manager</h1>
         <h1 className='text-2xl font-bold my-1'>Welcome back</h1>
         <p className='text-sm text-gray-400 font-medium my-1'>Enter your credentials to sign in to your account</p>
-        <div className='w-1/3 mt-3'>
+        <div className='w-2/3 sm:w-1/3 mt-3'>
           <form onSubmit={handleSubmit} >
             <p className='pb-3 font-semibold'>Email</p>
             <input 
